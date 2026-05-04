@@ -92,12 +92,17 @@ const App: React.FC = () => {
         // Include the "See Full Work" terminal card in total travel
         const totalTravel = PROJECTS.length * itemSize;
 
+        // Ensure track has correct width for calculation
+        gsap.set(horizontalTrackRef.current, { width: 'max-content' });
+
         scrollTriggerRef.current = ScrollTrigger.create({
           trigger: "#work",
           start: "top top",
-          end: () => `+=${totalTravel + window.innerHeight}`,
+          end: () => `+=${totalTravel + window.innerHeight * 0.8}`,
           pin: true,
-          scrub: 1.5,
+          pinSpacing: true,
+          anticipatePin: 1,
+          scrub: 1,
           snap: {
             snapTo: 1 / PROJECTS.length,
             duration: { min: 0.2, max: 0.8 },
@@ -134,13 +139,20 @@ const App: React.FC = () => {
     }
   }, [isLoading]);
 
-  // Refresh ScrollTrigger after initial load
+  // Refresh ScrollTrigger after initial load and on resize
   useEffect(() => {
     if (!isLoading) {
       const timer = setTimeout(() => {
         ScrollTrigger.refresh();
-      }, 500);
-      return () => clearTimeout(timer);
+      }, 1000); // Increased delay to ensure layout is settled
+
+      const handleResize = () => ScrollTrigger.refresh();
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('resize', handleResize);
+      };
     }
   }, [isLoading]);
 
@@ -215,7 +227,7 @@ const App: React.FC = () => {
             <Hero />
           </motion.div>
 
-          <section id="work" className="relative h-screen flex flex-col items-center justify-center bg-white dark:bg-zinc-950 z-[10] py-12 md:py-20">
+          <section id="work" className="relative h-screen flex flex-col items-center justify-center bg-white dark:bg-zinc-950 z-[50] py-12 md:py-20">
             <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
 
             <div className="max-w-7xl w-full px-4 text-center z-10 flex flex-col items-center h-full justify-between">
@@ -301,7 +313,7 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          <section id="expertise" className="relative z-[20] bg-white dark:bg-zinc-950">
+          <section id="expertise" className="relative z-[40] bg-white dark:bg-zinc-950">
             <Expertise />
           </section>
 
@@ -309,7 +321,7 @@ const App: React.FC = () => {
             <Testimonials />
           </section>
 
-          <section id="contact" className="relative z-[40] bg-white dark:bg-zinc-950">
+          <section id="contact" className="relative z-[20] bg-white dark:bg-zinc-950">
             <Contact />
           </section>
         </>
