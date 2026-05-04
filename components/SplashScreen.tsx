@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 interface SplashScreenProps {
@@ -8,42 +8,46 @@ interface SplashScreenProps {
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const recRef = useRef<HTMLDivElement>(null);
-  const bracketsRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     const tl = gsap.timeline({
       onComplete: () => {
         gsap.to(containerRef.current, {
-          opacity: 0,
-          duration: 0.8,
-          ease: "power4.inOut",
+          y: "-100%",
+          duration: 0.6,
+          ease: "expo.inOut",
           onComplete: onComplete
         });
       }
     });
 
-    // Initial state
-    gsap.set([recRef.current, bracketsRef.current, textRef.current, lineRef.current], { opacity: 0 });
-    gsap.set(bracketsRef.current, { scale: 1.2 });
+    // Fast loading counter simulation
+    const counterObj = { value: 0 };
+    gsap.to(counterObj, {
+      value: 100,
+      duration: 1.2,
+      ease: "power2.inOut",
+      onUpdate: () => setCounter(Math.floor(counterObj.value))
+    });
 
     // Animation sequence
-    tl.to(lineRef.current, { opacity: 0.2, duration: 0.5 })
-      .to(bracketsRef.current, { opacity: 1, scale: 1, duration: 1, ease: "expo.out" }, "+=0.2")
-      .to(recRef.current, { opacity: 1, duration: 0.3 }, "-=0.5")
-      .to(textRef.current, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.3")
-      // Pulsing REC dot
-      .to(recRef.current, { opacity: 0.4, duration: 0.6, repeat: 3, yoyo: true, ease: "none" }, "-=0.5")
-      // Final reveal
-      .to([bracketsRef.current, recRef.current, textRef.current], { 
-        scale: 1.1, 
+    tl.set(textRef.current, { opacity: 0, skewX: 20 })
+      .to(textRef.current, { opacity: 1, skewX: 0, duration: 0.4, ease: "power4.out" })
+      .to(barRef.current, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, 0)
+      .to(textRef.current, { 
         opacity: 0, 
-        duration: 0.8, 
-        ease: "expo.inOut",
-        stagger: 0.1 
-      }, "+=0.5");
+        duration: 0.1, 
+        repeat: 3, 
+        yoyo: true, 
+        delay: 0.5 
+      })
+      .to(containerRef.current, { 
+        filter: "brightness(2)", 
+        duration: 0.2 
+      }, "-=0.2");
 
     return () => {
       tl.kill();
@@ -53,55 +57,47 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   return (
     <div 
       ref={containerRef}
-      className="fixed inset-0 z-[1000] bg-white dark:bg-zinc-950 flex items-center justify-center overflow-hidden transition-colors duration-700"
+      className="fixed inset-0 z-[1000] bg-zinc-950 flex flex-col items-center justify-center overflow-hidden"
     >
-      {/* Background Grid Texture */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.07] pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-      
-      {/* Scanline Effect */}
-      <div ref={lineRef} className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-500/5 to-transparent h-20 w-full -translate-y-full animate-[scanline_4s_linear_infinite] pointer-events-none"></div>
+      {/* Cinematic Noise Texture */}
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
-      <div className="relative flex flex-col items-center">
-        {/* Cinematic Brackets */}
-        <div ref={bracketsRef} className="absolute -inset-16 md:-inset-24 border-zinc-200 dark:border-zinc-800 pointer-events-none">
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-zinc-900 dark:border-white"></div>
-          <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-zinc-900 dark:border-white"></div>
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-zinc-900 dark:border-white"></div>
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-zinc-900 dark:border-white"></div>
+      <div className="relative flex flex-col items-center gap-8">
+        <div ref={textRef} className="flex flex-col items-center">
+            <h2 className="text-4xl md:text-6xl font-black tracking-[0.2em] text-white font-serif italic mb-2">
+                DJ / 2026
+            </h2>
+            <div className="flex items-center gap-4">
+                <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">System Boot // Post-Production</span>
+            </div>
         </div>
 
-        {/* REC Indicator */}
-        <div ref={recRef} className="flex items-center gap-3 mb-8">
-          <div className="w-3 h-3 rounded-full bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.5)]"></div>
-          <span className="text-[10px] font-black text-zinc-900 dark:text-white uppercase tracking-[0.5em]">REC // SYNCING</span>
+        {/* Progress System */}
+        <div className="w-64 md:w-80 h-[2px] bg-zinc-900 relative overflow-hidden">
+            <div 
+                ref={barRef} 
+                className="absolute top-0 left-0 h-full w-full bg-white origin-left scale-x-0"
+            />
         </div>
 
-        {/* Central Text */}
-        <div ref={textRef} className="text-center">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tighter text-zinc-900 dark:text-white font-serif italic mb-2">
-            DEV JENA
-          </h2>
-          <div className="flex items-center justify-center gap-4">
-             <span className="w-8 h-[1px] bg-zinc-200 dark:bg-zinc-800"></span>
-             <span className="text-[8px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.4em]">POST-PRODUCTION</span>
-             <span className="w-8 h-[1px] bg-zinc-200 dark:bg-zinc-800"></span>
-          </div>
-        </div>
-
-        {/* Technical Ticker Bottom */}
-        <div className="absolute bottom-[-100px] flex gap-8 whitespace-nowrap opacity-20 dark:opacity-40">
-           <span className="text-[7px] font-mono font-bold text-zinc-900 dark:text-white">FRM: 00024</span>
-           <span className="text-[7px] font-mono font-bold text-zinc-900 dark:text-white">BUF: 100%</span>
-           <span className="text-[7px] font-mono font-bold text-zinc-900 dark:text-white">RES: 3840x2160</span>
+        <div className="flex flex-col items-center gap-1">
+            <span className="text-[40px] font-black text-white font-mono leading-none">
+                {counter.toString().padStart(3, '0')}
+            </span>
+            <span className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.5em]">Sequence Initializing</span>
         </div>
       </div>
 
-      <style>{`
-        @keyframes scanline {
-          from { transform: translateY(-100%); }
-          to { transform: translateY(1000%); }
-        }
-      `}</style>
+      {/* Edge Data */}
+      <div className="absolute top-12 left-12 flex flex-col gap-1 opacity-20">
+         <span className="text-[8px] font-mono text-white tracking-tighter">RENDER_ENGINE: V2.5</span>
+         <span className="text-[8px] font-mono text-white tracking-tighter">BUFFER_STATE: OPTIMIZED</span>
+      </div>
+
+      <div className="absolute bottom-12 right-12 flex flex-col items-end gap-1 opacity-20 text-right">
+         <span className="text-[8px] font-mono text-white tracking-tighter">TC: 00:00:00:24</span>
+         <span className="text-[8px] font-mono text-white tracking-tighter">FPS: 60.00</span>
+      </div>
     </div>
   );
 };

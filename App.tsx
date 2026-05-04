@@ -14,6 +14,7 @@ import Contact from './components/Contact';
 import ProjectDetail from './components/ProjectDetail';
 import SplashScreen from './components/SplashScreen';
 import FullWorkGrid from './components/FullWorkGrid';
+import Menu from './components/Menu';
 import { PROJECTS } from './constants';
 import { Project } from './types';
 
@@ -154,7 +155,11 @@ const App: React.FC = () => {
 
   const closeFullWork = () => {
     setShowFullWork(false);
-    if (lenisRef.current) lenisRef.current.start();
+    if (lenisRef.current) {
+      lenisRef.current.start();
+      // Ensure ScrollTrigger recalculates after the modal closes
+      ScrollTrigger.refresh();
+    }
   };
 
   const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
@@ -189,6 +194,8 @@ const App: React.FC = () => {
         project={selectedProject} 
         onClose={() => setSelectedProject(null)} 
       />
+
+      <Menu />
 
       <button 
         onClick={toggleTheme}
@@ -322,7 +329,7 @@ const App: React.FC = () => {
           overscroll-behavior: contain;
         }
         .lenis.lenis-stopped {
-          overflow: auto;
+          overflow: hidden;
         }
         .lenis.lenis-scrolling iframe {
           pointer-events: none;

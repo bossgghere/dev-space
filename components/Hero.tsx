@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
 import gsap from 'gsap';
+import FluidBackground from './FluidBackground';
 
 const Hero: React.FC = () => {
   const { scrollY } = useScroll();
@@ -67,9 +68,13 @@ const Hero: React.FC = () => {
 
   return (
     <section 
+      id="hero"
       ref={containerRef}
       className="relative min-h-[110vh] flex items-center justify-center bg-white dark:bg-zinc-950 overflow-hidden select-none transition-colors duration-700"
     >
+      {/* FLUID SIMULATION BACKGROUND */}
+      <FluidBackground />
+
       {/* Background Cinematic Texture */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.07] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-multiply dark:mix-blend-overlay"></div>
@@ -216,18 +221,6 @@ const Hero: React.FC = () => {
               </div>
            </div>
         </div>
-      </motion.div>
-
-      {/* CURSOR FLARE EFFECT */}
-      <motion.div 
-        style={{ 
-          x: useTransform(springX, [-0.5, 0.5], [-200, 200]),
-          y: useTransform(springY, [-0.5, 0.5], [-100, 100]),
-        }}
-        className="absolute inset-0 z-50 pointer-events-none opacity-20 dark:opacity-40"
-      >
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-blue-400 to-transparent blur-sm"></div>
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl"></div>
       </motion.div>
 
       {/* SCROLL INDICATOR */}
