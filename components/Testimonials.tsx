@@ -46,7 +46,7 @@ const Testimonials: React.FC = () => {
   return (
     <section 
       ref={containerRef} 
-      className="relative min-h-screen bg-zinc-50 dark:bg-zinc-900/30 overflow-hidden flex flex-col justify-center py-20 transition-colors duration-500"
+      className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden flex flex-col justify-center py-20 transition-colors duration-500"
     >
       {/* Background Cinematic Grid */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:60px_60px]"></div>

@@ -86,16 +86,29 @@ const Menu: React.FC = () => {
       onComplete: () => {
         setIsOpen(false);
         setIsAnimating(false);
+        // Reset states for next open
         gsap.set(menuBgRef.current, { attr: { d: OPEN_HIDDEN } });
+        gsap.set(linksRef.current, { opacity: 1, y: 0 });
+        if (infoRef.current) {
+            gsap.set(infoRef.current.children, { opacity: 0, y: 32 });
+        }
+        linksRef.current.forEach(link => {
+            if (link) {
+                gsap.set(link.querySelectorAll('.menu-char'), { 
+                    x: "500%", 
+                    opacity: 0 
+                });
+            }
+        });
       }
     });
 
     gsap.set(menuBgRef.current, { attr: { d: CLOSE_START } });
 
     tl.to([linksRef.current, infoRef.current], {
-      duration: 0.3,
+      duration: 0.4,
       opacity: 0,
-      y: 20,
+      y: 40,
       ease: "power2.in"
     });
 

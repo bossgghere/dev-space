@@ -84,7 +84,7 @@ const App: React.FC = () => {
 
   // Horizontal Scroll Setup
   useEffect(() => {
-    if (!isLoading && horizontalTrackRef.current && !showFullWork) {
+    if (!isLoading && horizontalTrackRef.current) {
       const ctx = gsap.context(() => {
         const itemWidth = window.innerWidth >= 768 ? 320 : 288;
         const gap = 32;
@@ -132,7 +132,17 @@ const App: React.FC = () => {
 
       return () => ctx.revert();
     }
-  }, [isLoading, showFullWork]);
+  }, [isLoading]);
+
+  // Refresh ScrollTrigger after initial load
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
   const handleCardClick = (project: Project) => {
     const index = PROJECTS.findIndex(p => p.id === project.id);
@@ -190,11 +200,6 @@ const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <ProjectDetail 
-        project={selectedProject} 
-        onClose={() => setSelectedProject(null)} 
-      />
-
       <Menu />
 
       <button 
@@ -210,7 +215,7 @@ const App: React.FC = () => {
             <Hero />
           </motion.div>
 
-          <section id="work" className="relative h-screen flex flex-col items-center justify-center bg-white dark:bg-zinc-950 z-10 py-12 md:py-20">
+          <section id="work" className="relative h-screen flex flex-col items-center justify-center bg-white dark:bg-zinc-950 z-[10] py-12 md:py-20">
             <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
 
             <div className="max-w-7xl w-full px-4 text-center z-10 flex flex-col items-center h-full justify-between">
@@ -296,19 +301,24 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          <section id="expertise" className="relative z-10 bg-white dark:bg-zinc-950">
+          <section id="expertise" className="relative z-[20] bg-white dark:bg-zinc-950">
             <Expertise />
           </section>
 
-          <section id="testimonials" className="relative z-10">
+          <section id="testimonials" className="relative z-[30] bg-white dark:bg-zinc-950">
             <Testimonials />
           </section>
 
-          <section id="contact" className="relative z-10 bg-white dark:bg-zinc-950">
+          <section id="contact" className="relative z-[40] bg-white dark:bg-zinc-950">
             <Contact />
           </section>
         </>
       )}
+
+      <ProjectDetail 
+        project={selectedProject} 
+        onClose={() => setSelectedProject(null)} 
+      />
 
       <style>{`
         .no-scrollbar::-webkit-scrollbar {
