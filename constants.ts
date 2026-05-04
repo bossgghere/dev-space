@@ -67,6 +67,50 @@ export const PROJECTS: Project[] = [
     description: 'Professional commercial edit focused on brand identity. Short, punchy, and impactful storytelling for modern advertising.',
     rating: '9.6/10',
     episodes: ['Brand Tone', 'Pacing', 'Motion Graphics']
+  },
+  {
+    id: '7',
+    title: 'Cyberpunk 2077',
+    category: 'Game Trailer',
+    year: '2024',
+    thumbnail: 'https://images.unsplash.com/photo-1605898399783-1820b735e127?q=80&w=800&auto=format&fit=crop',
+    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    description: 'Fast-paced gaming montage with heavy glitch effects and neon color grading. Designed to match high-tempo electronic music.',
+    rating: '9.8/10',
+    episodes: ['Glitch VFX', 'Neon Grading', 'Speed Ramping']
+  },
+  {
+    id: '8',
+    title: 'Urban Explorer',
+    category: 'Vlog Edit',
+    year: '2025',
+    thumbnail: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=800&auto=format&fit=crop',
+    videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+    description: 'Atmospheric vlog editing for urban explorers. Focuses on cinematic sound design and smooth transition flow between locations.',
+    rating: '9.7/10',
+    episodes: ['Sound Design', 'Flow Transitions', 'Color Matching']
+  },
+  {
+    id: '9',
+    title: 'Tech Review 2.0',
+    category: 'Corporate',
+    year: '2024',
+    thumbnail: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop',
+    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    description: 'Sleek and professional tech product review. Features clean lower thirds, minimalist motion graphics, and crisp B-roll integration.',
+    rating: '9.5/10',
+    episodes: ['Clean Graphics', 'B-Roll Sync', 'Professional Tone']
+  },
+  {
+    id: '10',
+    title: 'The Grand Canyon',
+    category: 'Travel Film',
+    year: '2025',
+    thumbnail: 'https://images.unsplash.com/photo-1474487056435-c52905c632bc?q=80&w=800&auto=format&fit=crop',
+    videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+    description: 'Wide-angle landscape cinematography edit. Focused on epic scale, natural color palettes, and sweeping visual narratives.',
+    rating: '9.9/10',
+    episodes: ['Epic Pacing', 'Nature Grading', 'Drone B-Roll']
   }
 ];
 
@@ -116,3 +160,38 @@ export const CONTACT_DATA = {
   discord: 'https://discord.com/users/gamer__dev',
   whatsapp: 'https://wa.me/918260811319'
 };
+
+export const TESTIMONIALS = [
+  {
+    id: '1',
+    clientName: 'Alex Rivera',
+    role: 'Creative Director @ CineShift',
+    content: "Dev's ability to understand the rhythm of a story is unmatched. He doesn't just cut clips; he builds tension and emotion where you didn't know it existed.",
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop',
+    projectRef: 'Brand Story'
+  },
+  {
+    id: '2',
+    clientName: 'Sarah Chen',
+    role: 'Independent Filmmaker',
+    content: "The color science Dev applied to my documentary was breathtaking. He transformed raw Log footage into a cinematic masterpiece that won 'Best Visuals' at our local festival.",
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop',
+    projectRef: 'The Unseen Path'
+  },
+  {
+    id: '3',
+    clientName: 'Marcus Thorne',
+    role: 'Lead Editor @ GamingHub',
+    content: "Fast, precise, and incredibly technically proficient. Dev handled a complex 4-camera multicam edit with glitch VFX and had a draft ready in 24 hours. Incredible.",
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop',
+    projectRef: 'Cyberpunk 2077'
+  },
+  {
+    id: '4',
+    clientName: 'Elena Volkov',
+    role: 'Head of Content @ Streamline',
+    content: "Working with Dev Jena is like having a secret weapon in post-production. His motion graphics are clean, modern, and elevate the entire brand identity of our channel.",
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop',
+    projectRef: 'iShowSpeed Chaos'
+  }
+];

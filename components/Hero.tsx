@@ -1,10 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import gsap from 'gsap';
 
 const Hero: React.FC = () => {
   const { scrollY } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   
   // Mouse movement for 3D Tilt & Lens Flare
   const mouseX = useMotionValue(0);
@@ -34,6 +36,22 @@ const Hero: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
 
+  // GSAP Entrance Animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "expo.out", duration: 2 } });
+
+      tl.from(".hero-text-back", { opacity: 0, scale: 0.9, duration: 2.5 })
+        .from(".hero-portrait-main", { y: 100, opacity: 0, scale: 0.95 }, "-=2")
+        .from(".hero-portrait-side", { y: 150, opacity: 0, stagger: 0.2 }, "-=1.8")
+        .from(".hero-text-front", { y: 50, opacity: 0 }, "-=1.5")
+        .from(".hero-hud-element", { opacity: 0, x: (i) => i % 2 === 0 ? -20 : 20, stagger: 0.1 }, "-=1.2")
+        .from(".hero-scroll-indicator", { opacity: 0, y: -20 }, "-=1");
+    }, contentRef);
+
+    return () => ctx.revert();
+  }, []);
+
   // Technical Ticker Data
   const [techData, setTechData] = useState({ iso: 400, shutter: '1/50', k: 5600 });
   useEffect(() => {
@@ -60,6 +78,7 @@ const Hero: React.FC = () => {
 
       {/* Main Composition Stage */}
       <motion.div 
+        ref={contentRef}
         style={{ 
           opacity, 
           scale,
@@ -73,7 +92,7 @@ const Hero: React.FC = () => {
         {/* BACKGROUND TEXT LAYER */}
         <motion.div 
           style={{ y: yTextBack }}
-          className="absolute inset-0 flex items-center justify-center z-10"
+          className="hero-text-back absolute inset-0 flex items-center justify-center z-10"
         >
           <h1 className="text-[18vw] font-black tracking-[-0.08em] text-zinc-100 dark:text-zinc-900/40 leading-none select-none">
             DEV JENA
@@ -85,7 +104,7 @@ const Hero: React.FC = () => {
           {/* Side Panel Left */}
           <motion.div 
             style={{ y: yImageSides }}
-            className="hidden md:block w-1/4 h-[40%] rounded-3xl overflow-hidden grayscale opacity-40 blur-[2px] border border-zinc-200 dark:border-zinc-800"
+            className="hero-portrait-side hidden md:block w-1/4 h-[40%] rounded-3xl overflow-hidden grayscale opacity-40 blur-[2px] border border-zinc-200 dark:border-zinc-800"
           >
             <img 
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop" 
@@ -97,7 +116,7 @@ const Hero: React.FC = () => {
           {/* Main Center Portrait */}
           <motion.div 
             style={{ y: yImageCenter }}
-            className="relative w-full md:w-1/2 h-[70%] md:h-[85%] rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.2)] dark:shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border-[12px] border-white dark:border-zinc-900 group"
+            className="hero-portrait-main relative w-full md:w-1/2 h-[70%] md:h-[85%] rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.2)] dark:shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border-[12px] border-white dark:border-zinc-900 group"
           >
             <div className="absolute inset-0 bg-zinc-900/10 dark:bg-zinc-900/40 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700"></div>
             <img 
@@ -123,7 +142,7 @@ const Hero: React.FC = () => {
           {/* Side Panel Right */}
           <motion.div 
             style={{ y: yImageSides }}
-            className="hidden md:block w-1/4 h-[40%] rounded-3xl overflow-hidden grayscale opacity-40 blur-[2px] border border-zinc-200 dark:border-zinc-800"
+            className="hero-portrait-side hidden md:block w-1/4 h-[40%] rounded-3xl overflow-hidden grayscale opacity-40 blur-[2px] border border-zinc-200 dark:border-zinc-800"
           >
             <img 
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop" 
@@ -136,7 +155,7 @@ const Hero: React.FC = () => {
         {/* FRONT TEXT LAYER (INTERWOVEN) */}
         <motion.div 
           style={{ y: yTextFront }}
-          className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none"
+          className="hero-text-front absolute inset-0 flex items-center justify-center z-30 pointer-events-none"
         >
           <div className="relative text-center">
             <h1 className="text-[18vw] font-black tracking-[-0.08em] text-zinc-900 dark:text-white leading-none mix-blend-normal">
@@ -149,7 +168,7 @@ const Hero: React.FC = () => {
         {/* FLOATING HUD ELEMENTS */}
         <div className="absolute inset-0 z-40 p-12 pointer-events-none hidden lg:flex flex-col justify-between">
            <div className="flex justify-between items-start">
-              <div className="space-y-6">
+              <div className="space-y-6 hero-hud-element">
                  <div className="flex flex-col gap-1">
                     <span className="text-[8px] font-black text-zinc-300 dark:text-zinc-700 uppercase tracking-[0.4em]">Lens Configuration</span>
                     <span className="text-xs font-bold text-zinc-900 dark:text-white uppercase">35MM ANAMORPHIC // T2.8</span>
@@ -160,7 +179,7 @@ const Hero: React.FC = () => {
                  </div>
               </div>
 
-              <div className="flex flex-col items-end gap-1">
+              <div className="hero-hud-element flex flex-col items-end gap-1">
                  <div className="w-32 h-12 flex items-end gap-1 pb-2">
                     {[0.2, 0.5, 0.8, 0.4, 0.9, 0.3, 0.6].map((h, i) => (
                       <motion.div 
@@ -176,7 +195,7 @@ const Hero: React.FC = () => {
            </div>
 
            <div className="flex justify-between items-end">
-              <div className="flex gap-12">
+              <div className="hero-hud-element flex gap-12">
                  <div className="flex flex-col">
                     <span className="text-[8px] font-black text-zinc-300 dark:text-zinc-700 uppercase tracking-[0.4em]">ISO</span>
                     <span className="text-xs font-mono font-bold text-zinc-900 dark:text-white">{techData.iso}</span>
@@ -191,7 +210,7 @@ const Hero: React.FC = () => {
                  </div>
               </div>
               
-              <div className="text-right">
+              <div className="hero-hud-element text-right">
                 <span className="text-[8px] font-black text-zinc-300 dark:text-zinc-700 uppercase tracking-[0.4em] block mb-1">Portfolio v2.5.0</span>
                 <span className="text-xs font-bold text-zinc-900 dark:text-white uppercase">Post-Production Director</span>
               </div>
@@ -215,7 +234,7 @@ const Hero: React.FC = () => {
       <motion.div 
         animate={{ y: [0, 10, 0] }}
         transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        className="absolute bottom-12 flex flex-col items-center gap-4 z-40"
+        className="hero-scroll-indicator absolute bottom-12 flex flex-col items-center gap-4 z-40"
       >
         <div className="text-[8px] font-black uppercase tracking-[0.5em] text-zinc-300 dark:text-zinc-700 rotate-90 origin-center mb-8">SCROLL</div>
         <div className="w-px h-16 bg-zinc-100 dark:bg-zinc-800 relative overflow-hidden">
