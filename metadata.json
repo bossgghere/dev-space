@@ -1,0 +1,8 @@
+{
+  "name": "Dev Jena | Portfolio",
+  "description": "A high-end cinematic portfolio for video editor Dev Jena featuring smooth scroll transitions and an interactive fanned-card work section.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
